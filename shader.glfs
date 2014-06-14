@@ -1,0 +1,27 @@
+#version 130
+
+uniform vec3 ambient_color;
+uniform vec3 ambient_direction;
+uniform float ambient_intensity;
+
+uniform vec4 color;
+uniform sampler2D texture_unit;
+
+in vec2 texcoord;
+
+smooth in vec3 normal;
+
+
+
+void main(){
+
+  vec4 texel = texture(texture_unit, texcoord) * color;
+  
+  if(texel.a < 0.1)
+    discard;
+  
+  float diffuse = max(0.0, dot(normalize(normal), -ambient_direction));
+  
+  gl_FragColor = texel * vec4(ambient_color * min(1.0, (ambient_intensity + diffuse)), 1.0);
+  
+}
